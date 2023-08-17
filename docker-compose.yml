@@ -1,0 +1,25 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./expressapi
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/contacts
+    ports:
+      - 3005:3005
+    depends_on:
+      - mongo
+  mongo:
+    image: mongo:latest
+    ports:
+      - 27017:27017
+  frontend:
+    build:
+      context: ./contact-management
+      args:
+        - REACT_APP_API_URL=http://localhost:3005
+    depends_on:
+      - backend
+    ports:
+      - 8080:80
